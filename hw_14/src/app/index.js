@@ -158,3 +158,4 @@ for (const element of spans) {
     element.innerText = getInfo[text]();
   }
 }
+b;
