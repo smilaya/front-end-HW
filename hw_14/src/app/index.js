@@ -30,14 +30,34 @@ const DATA = {
   isLeapYear(year) {
     return this.getMaxDay(year, 2).getDate() === 29;
   },
-};
+  formatDate(date) {
+    date = new Date();
 
-const userFabric = function (firstName, lastName, year, month, day) {
+    let dd = date.getDate();
+    dd < 10 ? (dd = "0" + dd) : dd;
+
+    let mm = date.getMonth() + 1;
+    mm < 10 ? (mm = "0" + mm) : mm;
+
+    let yy = date.getFullYear() % 100;
+    yy < 10 ? (yy = "0" + yy) : yy;
+
+    let hh = date.getHours();
+    hh < 10 ? (hh = "0" + hh) : hh;
+
+    let mn = date.getMinutes();
+    mn < 10 ? (mn = "0" + mn) : mn;
+
+    formatedDate = dd + "/" + mm + "/" + yy + " " + hh + ":" + mn + ";";
+    return formatedDate;
+  },
+};
+const userFabric = (function (firstName, lastName, year, month, day) {
   return {
     firstName,
     lastName,
     year,
-    month, // 1...12
+    month,
     day,
     get fullName() {
       return `${this.firstName} ${this.lastName}`;
@@ -55,99 +75,86 @@ const userFabric = function (firstName, lastName, year, month, day) {
         this.lastName = lastName;
       }
     },
+    ageUser() {
+      const minYear = 1900;
+      const date = new Date();
+      const maxYear = date.getFullYear();
+      validateYear = function (input) {
+        return input < minYear || input > maxYear;
+      };
+      const year = STDIN.number(
+        `Enter your year of birthday : only numbers, min: ${minYear}, max: ${maxYear}`,
+        validateYear
+      );
 
-    get age() {
-      const month = this.month - 1;
+      const minMonth = 1;
+      const maxMonth = 12;
+      validateMonth = function (input) {
+        return input < minMonth || input > maxMonth;
+      };
+      const month = STDIN.number(
+        `Enter your month of birthday : only numbers, min: ${minMonth}, max: ${maxMonth}`,
+        validateMonth
+      );
 
-      const now = new Date();
+      const minDay = 1;
+      const maxDay = DATA.getMaxDay(year, month);
+      validateDay = function (input) {
+        return input < minDay || input > maxDay;
+      };
+      const day = STDIN.number(
+        `Enter your day of birthday : only numbers, min: ${minDay}, max: ${maxDay}`,
+        validateDay
+      );
 
-      const originBirthDay = new Date(this.year, month, this.day);
-      const birthDay = new Date(now.getFullYear(), month, this.day);
-
-      const fullAge = birthDay.getFullYear() - originBirthDay.getFullYear();
-
-      if (now > birthDay) {
-        return fullAge;
-      } else {
-        return fullAge - 1;
-      }
+      const ageUser = function (year, month, day) {
+        const birthDate = new Date();
+        birthDate.setFullYear(year);
+        birthDate.setMonth(month - 1);
+        birthDate.setDate(day);
+        let age = date.getFullYear() - birthDate.getFullYear();
+        let m = date.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && date.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        return age;
+      };
+      return ageUser(year, month, day);
     },
   };
+})();
+const FIRST_NAME_MIN_LENGTH = 5;
+const FIRST_NAME_MAX_LENGTH = 20;
+const validateFirstName = (input) => {
+  return input < FIRST_NAME_MIN_LENGTH || input > FIRST_NAME_MAX_LENGTH;
+};
+const getInfo = {
+  firstName() {
+    return STDIN.string(
+      `Enter your first name :  min symbol: ${FIRST_NAME_MIN_LENGTH}, max symbols: ${FIRST_NAME_MAX_LENGTH}`,
+      validateFirstName
+    );
+  },
+
+  lastName() {
+    return STDIN.string(
+      `Enter your last name :  min symbol: ${FIRST_NAME_MIN_LENGTH}, max symbols: ${FIRST_NAME_MAX_LENGTH}`,
+      validateFirstName
+    );
+  },
+  age() {
+    return userFabric.ageUser();
+  },
+  date() {
+    return DATA.formatDate();
+  },
 };
 
-function addUser() {
-  const entries = [];
+const spans = document.querySelectorAll("span");
+for (const element of spans) {
+  const text = element.innerText;
 
-  const FIRST_NAME_MIN_LENGTH = 5;
-  const FIRST_NAME_MAX_LENGTH = 20;
-
-  const validateFirstName = (input) => {
-    return input < FIRST_NAME_MIN_LENGTH || input > FIRST_NAME_MAX_LENGTH;
-  };
-  const firstName = STDIN.string(
-    `Enter your first name :  min symbol: ${FIRST_NAME_MIN_LENGTH}, max symbols: ${FIRST_NAME_MAX_LENGTH}`,
-    validateFirstName
-  );
-
-  const lastName = STDIN.string(
-    `Enter your last name :  min symbol: ${FIRST_NAME_MIN_LENGTH}, max symbols: ${FIRST_NAME_MAX_LENGTH}`,
-    validateFirstName
-  );
-  const minYear = 1900;
-  const date = new Date();
-  const maxYear = date.getFullYear();
-  const validateYear = function (input) {
-    return input < minYear || input > maxYear;
-  };
-  const year = STDIN.number(
-    `Enter your year of birthday : only numbers, min: ${minYear}, max: ${maxYear}`,
-    validateYear
-  );
-
-  const minMonth = 1;
-  const maxMonth = 12;
-  const validateMonth = function (input) {
-    return input < minMonth || input > maxMonth;
-  };
-  const month = STDIN.number(
-    `Enter your month of birthday : only numbers, min: ${minMonth}, max: ${maxMonth}`,
-    validateMonth
-  );
-
-  const minDay = 1;
-  const maxDay = DATA.getMaxDay(year, month);
-  const validateDay = function (input) {
-    return input < minDay || input > maxDay;
-  };
-  const day = STDIN.number(
-    `Enter your day of birthday : only numbers, min: ${minDay}, max: ${maxDay}`,
-    validateDay
-  );
-
-  const user = userFabric(firstName, lastName, year, month, day);
-  console.log(user);
-  entries.push(user);
-  var string =
-    "<section> <div><span>date</span></div></section><section>  <div>    <ul>      <li>        User: <span>firstName</span> <span>lastName</span> -        <span>age</span> years old; </li> </ul> </div></section>";
-
-  var messages = [];
-
-  var div = document.createElement("div");
-  div.innerHTML = string;
-  var spans = div.getElementsByTagName("span");
-  for (var span = 0; span < spans.length; span++) {
-    messages.push(spans[span].innerHTML);
+  if (text in getInfo) {
+    element.innerText = getInfo[text]();
   }
-  for (let i = 0; i < messages.length; i++) {
-    const message = messages[i];
-    if (message === "firstName") {
-      document.getElementsByTagName("span").value = user.firstName;
-    } else {
-      continue;
-    }
-    console.log(message);
-  }
-
-  console.log(messages);
 }
-addUser();
