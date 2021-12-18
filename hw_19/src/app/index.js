@@ -1,12 +1,24 @@
-const form = document.forms.login;
-const emailValue = form.email;
-const paswordValue = form.password;
-const submitButton = form.querySelector('[type="submit"]');
+const login = document.forms.login;
+const email = login.email;
+const user = document.querySelector("h2");
 const root = document.querySelector("#root");
+const hiddenSection = root.lastElementChild;
+const section = root.firstElementChild;
+
 const state = {};
-const emailAdmin = "admin@example.com";
-const passwordAdmin = "admin";
-const user = document.querySelector("span");
+
+const validation = {
+  email: (value) => !"admin@example.com",
+  password: (value) => !"admin",
+  consent: (checked) => !checked,
+};
+
+const errors = {
+  email: true,
+  password: true,
+  consent: true,
+};
+
 const handleEvent = (event) => {
   const { type, name, value, checked } = event.target;
   switch (type) {
@@ -16,34 +28,35 @@ const handleEvent = (event) => {
 
     default:
       state[name] = value;
-
       break;
   }
+
+  errors[name] =
+    name in validation ? validation[name](state[name], state) : false;
+
+  event.currentTarget.submitBtn.disabled = Object.keys(errors).some(
+    (key) => errors[key]
+  );
 };
+
 const handleSubmit = (event) => {
   event.preventDefault();
-  if (emailValue.value === emailAdmin && paswordValue.value === passwordAdmin) {
-    change();
-    user.innerHTML = emailValue.value;
-    if (form.remember.checked) {
-      document.cookie = `${emailValue.value}; max-age = ${60 * 60 * 24}`;
-    }
-  }
+  document.cookie = `email=${email.value};  max-age = ${60 * 60 * 24}`;
+  showCookieValue();
 };
-// document.cookie = `admin@example.com; max-age = -1`;
-const change = () => {
+
+const showCookieValue = () => {
   user.innerHTML = document.cookie;
-  const hiddenSection = root.lastElementChild;
-  const section = root.firstElementChild;
+
   section.hidden = true;
   hiddenSection.hidden = false;
 };
-const ready = () => {
+const checkACookieExist = () => {
   if (document.cookie) {
-    return change();
+    return showCookieValue();
   }
 };
-ready();
+checkACookieExist();
 
-form.addEventListener("change", handleEvent);
-form.addEventListener("submit", handleSubmit);
+login.addEventListener("change", handleEvent);
+login.addEventListener("submit", handleSubmit);
