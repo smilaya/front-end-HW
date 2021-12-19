@@ -158,3 +158,7 @@ for (const element of spans) {
     element.innerText = getInfo[text]();
   }
 }
+<<<<<<< HEAD
+=======
+b;
+>>>>>>> main
