@@ -1,0 +1,88 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  padding-top: 80px;
+  padding-left: 150px;
+}
+
+body {
+  border: 8px solid #90eee1;
+  border-radius: 20px;
+  padding: 30px;
+  width: 60%;
+  height: 400px;
+  margin: 0 auto;
+  background: url(../media/1783294.jpg);
+}
+
+#clock,
+#date {
+  height: 20px;
+  font-size: 50px;
+  font-family: arial;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #90eee1;
+}
+#date {
+  color: #90a9ee;
+  font-style: bold;
+}
+h2 {
+  text-align: center;
+}
+
+#alarm-container {
+  text-align: center;
+  font-family: Verdana;
+  font-size: 0.7 em;
+  padding: 0.2em;
+  color: white;
+}
+
+label {
+  display: inline-block;
+}
+#alarmhrs,
+#alarmmins,
+#alarmsecs {
+  width: 50px;
+  height: 25px;
+  font-size: 20px;
+}
+.timeofday {
+  background-color: #eee;
+}
+
+#sounds {
+  text-align: center;
+  padding-top: 20px;
+}
+
+#setButton {
+  float: left;
+  background-color: #90eee1;
+  margin-top: 10px;
+  font-size: 20px;
+  width: 150px;
+  height: 40px;
+}
+#clearButton {
+  float: right;
+  background-color: #90a9ee;
+  color: #fff;
+  margin-top: 10px;
+  font-size: 20px;
+  width: 150px;
+  height: 40px;
+}
+#checkbox {
+  display: block;
+  text-align: left;
+  margin-top: 70px;
+  padding-left: 15px;
+}
