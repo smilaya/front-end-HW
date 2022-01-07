@@ -103,15 +103,6 @@ function alarmSet() {
     }, time);
   }
 
-  // alarmClock = setTimeout(
-  //   alarm,
-  //   //   function () {
-  //   //   if (alarmTime === currentTime) {
-  //   //     sound.play();
-  //   //   }
-  //   // }
-  //   24 * 60 * 60 * 1000
-  // );
   console.log("currentTime:" + currentTime);
 }
 
