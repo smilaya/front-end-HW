@@ -5,11 +5,16 @@ sound.loop = true;
 const h1 = document.getElementById("date");
 const h2 = document.getElementById("clock");
 const check = document.getElementById("check");
+const hr = document.getElementById("alarmhrs");
+
+const min = document.getElementById("alarmmins");
+
+const sec = document.getElementById("alarmsecs");
 
 const currentTime = setInterval(function () {
-  const date = new Date();
-  const localTime = date.toLocaleTimeString();
-  const localDate = date.toLocaleDateString();
+  const now = new Date();
+  const localTime = now.toLocaleTimeString();
+  const localDate = now.toLocaleDateString();
 
   const hours = localTime.split(":")[0];
   const minutes = localTime.split(":")[1];
@@ -18,8 +23,8 @@ const currentTime = setInterval(function () {
   h2.textContent = hours + ":" + minutes + ":" + seconds;
 }, 1000);
 
-function addZero(time) {
-  return time < 10 ? "0" + time : time;
+function addZero(times) {
+  return times < 10 ? "0" + times : times;
 }
 
 function hoursMenu() {
@@ -53,12 +58,6 @@ function secMenu() {
 secMenu();
 
 function alarmSet() {
-  const hr = document.getElementById("alarmhrs");
-
-  const min = document.getElementById("alarmmins");
-
-  const sec = document.getElementById("alarmsecs");
-
   const selectedHour = hr.options[hr.selectedIndex].value;
   const selectedMin = min.options[min.selectedIndex].value;
   const selectedSec = sec.options[sec.selectedIndex].value;
@@ -71,38 +70,55 @@ function alarmSet() {
     addZero(selectedSec);
   console.log("alarmTime:" + alarmTime);
 
-  document.getElementById("alarmhrs").disabled = true;
-  document.getElementById("alarmmins").disabled = true;
-  document.getElementById("alarmsecs").disabled = true;
+  hr.disabled = true;
+  min.disabled = true;
+  sec.disabled = true;
 
-  setTimeout(function () {
-    const date = new Date();
-    const localTime = date.toLocaleTimeString();
-    const localDate = date.toLocaleDateString();
-    const localDay = localDate.split(".")[0];
-    const currentTime = localTime;
+  const now = new Date();
+  const localTime = now.toLocaleTimeString();
+  const localDate = now.toLocaleDateString();
+  const localDay = localDate.split(".")[0];
+  const currentTime = localTime;
+  const time =
+    selectedHour * 60 * 60 * 1000 +
+    selectedMin * 60 * 1000 +
+    selectedSec * 1000 -
+    (now.getHours() * 60 * 60 * 1000 +
+      now.getMinutes() * 60 * 1000 +
+      now.getSeconds() * 1000);
+  console.log(time);
 
-    if (alarmTime == currentTime) {
+  if (check.checked) {
+    let repeat = setTimeout(function rep() {
       sound.play();
-    }
-    if (check.checked) {
-      console.log(`Alarm at: ${selectedHour} : ${selectedMin} EVERY DAY`);
-
-      repeat();
-    }
-  }, 1000);
-  const repeat = setInterval(function () {
-    if (alarmTime == currentTime) {
+      repeat = setTimeout(rep, 24 * 60 * 60 * 1000);
+    }, time);
+    console.log(`Alarm at: ${selectedHour} : ${selectedMin} EVERY DAY`);
+  } else {
+    const alarmClock = setTimeout(() => {
       sound.play();
-    }
-  }, 24 * 60 * 60 * 1000);
+      if (alarmClear()) {
+        clearTimeout(alarmClock);
+      }
+    }, time);
+  }
+
+  // alarmClock = setTimeout(
+  //   alarm,
+  //   //   function () {
+  //   //   if (alarmTime === currentTime) {
+  //   //     sound.play();
+  //   //   }
+  //   // }
+  //   24 * 60 * 60 * 1000
+  // );
   console.log("currentTime:" + currentTime);
 }
 
 function alarmClear() {
-  document.getElementById("alarmhrs").disabled = false;
-  document.getElementById("alarmmins").disabled = false;
-  document.getElementById("alarmsecs").disabled = false;
-  document.getElementById("check").checked = false;
+  hr.disabled = false;
+  min.disabled = false;
+  sec.disabled = false;
+  check.checked = false;
   sound.pause();
 }
