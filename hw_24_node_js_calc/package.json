@@ -1,0 +1,24 @@
+{
+  "name": "hw_24",
+  "version": "0.0.1",
+  "private": "true",
+  "description": "",
+  "scripts": {
+    "start": "node ./dist/index.js ",
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "keywords": [],
+  "author": "Alexandra Kogan",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.10",
+    "@types/uuid": "^8.3.4",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "u": "^0.1.0",
+    "uid": "^2.0.0",
+    "uuid": "^8.3.2"
+  }
+}
