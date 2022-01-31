@@ -23,6 +23,7 @@ comments.post(
       if (!userId) {
         throw new UnauthorizedError();
       }
+
       const { categoryId, postId } = req.params;
       const { body } = req.body;
       const response = await commentService.create(
