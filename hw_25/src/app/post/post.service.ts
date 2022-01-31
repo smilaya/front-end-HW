@@ -16,10 +16,40 @@ export class PostService {
     const post = new Post({
       tittle,
       body,
-      categoryId,
+      category,
       userId,
     });
     const result = await post.save();
     return result.populate("category");
+  }
+  async list(userId: string, categoryId: string) {
+    const category = await Category.findOne({ _id: categoryId, userId });
+
+    if (!category) {
+      throw new NotFoundError();
+    }
+
+    const posts = await Post.find().populate("category").exec();
+
+    return posts;
+  }
+  async find(userId: string, categoryId: string, postId: string) {
+    const category = await Category.findOne({ _id: categoryId }).exec();
+
+    if (!category) {
+      throw new NotFoundError();
+    }
+
+    const post = await Post.findById({
+      _id: postId,
+      userId,
+      category: category.id,
+    });
+
+    if (!post) {
+      throw new NotFoundError();
+    }
+
+    return post.populate("category");
   }
 }

@@ -6,7 +6,7 @@ const TOKEN = "Post";
 export interface IPOst extends Document {
   tittle: string;
   body: string;
-
+  userId: string;
   category: Types.ObjectId;
 }
 
@@ -20,7 +20,10 @@ const schema = new Schema<IPOst>({
     type: String,
     max: 250,
   },
-
+  userId: {
+    type: String,
+    required: true,
+  },
   category: {
     type: Schema.Types.ObjectId,
     ref: Category,

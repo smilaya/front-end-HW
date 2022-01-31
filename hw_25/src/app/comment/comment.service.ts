@@ -24,7 +24,7 @@ export class CommentService {
     const result = await comment.save();
     return result.populate({
       path: "post",
-      populate: "category",
+      populate: { path: "category" },
     });
   }
   async find(
@@ -40,7 +40,7 @@ export class CommentService {
     if (!post) {
       throw new NotFoundError();
     }
-    const comment = await Comment.findOne({
+    const comment = await Comment.findById({
       _id: commentId,
       userId,
       post: post.id,
@@ -66,7 +66,7 @@ export class CommentService {
     if (!post) {
       throw new NotFoundError();
     }
-    const comment = await Comment.deleteOne({
+    const comment = await Comment.findByIdAndDelete({
       _id: commentId,
       userId,
       post: post.id,
